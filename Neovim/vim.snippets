@@ -1,0 +1,5 @@
+snippet '=(.*)=' "===" br
+`!p snip.rv = '" ===' + len(match.group(1)) * '=' + '==='`
+`!p snip.rv = '" ===' + match.group(1) + '==='`
+`!p snip.rv = '" ===' + len(match.group(1)) * '=' + '==='`
+endsnippet

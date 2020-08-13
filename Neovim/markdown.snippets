@@ -1,0 +1,164 @@
+snippet '(?<!\\)([0-9])([0-9])tb' "new table" r
+$1`!p 
+x=match.group(1)
+y=match.group(2)
+row1=""
+row2="" 
+for i in range(int(x)):
+    row1+="| "
+    row2+="|:-:"
+row1+="|\n"
+row2+="|\n"
+out=row1+row2+int(y)*row1
+snip.rv=out
+`$0
+endsnippet
+
+#日期
+snippet today "Date"
+`date +%F`
+endsnippet
+
+#box片段
+snippet box "Box"
+`!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
+│ $1 │
+`!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
+$0
+endsnippet
+
+#行内数学公式
+snippet mk "Math" wA
+$${1}$`!p
+if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
+    snip.rv = ' '
+else:
+    snip.rv = ''
+`$2
+endsnippet
+
+#行间数学公式
+snippet dm "Math" wA
+$$
+$1
+$$ $0
+endsnippet
+
+# 上标和下标
+snippet '([A-Za-z])(\d)' "auto subscript" wrA
+`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
+endsnippet
+
+snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
+`!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}
+endsnippet
+
+snippet td "superscript" iA
+^{$1}$0
+endsnippet
+
+#分数
+snippet // "Fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+
+#求和
+snippet sum "Sum"
+\\sum_{$1}{$2}$0
+endsnippet
+
+#常用数学符号
+snippet >= ">=" i
+\\geq
+endsnippet
+snippet <= "<=" i
+\\leq
+endsnippet
+
+#常用转义字符绑定
+snippet al "alpha" i
+\\alpha
+endsnippet
+
+snippet be "beta" i
+\\beta
+endsnippet
+
+snippet ep "epsilon" i
+\\varepsilon
+endsnippet
+
+snippet ga "gamma" i
+\\gamma
+endsnippet
+
+snippet kk "qquad" i
+\\qquad
+endsnippet
+
+snippet ex "exists" i
+\\exists
+endsnippet
+
+snippet n. "cdots" i
+\\cdots
+endsnippet
+
+snippet avs "vector set alpha" i
+$\\alpha_1, \\alpha_2, \\cdots, \\alpha_{$1}$ $0
+endsnippet
+
+snippet bvs "vector set beta" i
+$\\beta_1, \\beta_2, \\cdots, \\beta_{$1}$ $0
+endsnippet
+
+snippet gvs "vector set gamma" i
+$\\gamma_1, \\gamma_2, \\cdots, \\gamma{$1}$ $0
+endsnippet
+
+snippet 'f([A-Za-z])' "formula letters" ir
+$`!p snip.rv = match.group(1)`$
+endsnippet
+
+snippet br "<br>" i
+<br>
+endsnippet
+
+# 中英文符号
+snippet ￥ "dollor" iA
+$
+endsnippet
+
+snippet …… "……&^" iA
+^
+endsnippet
+
+snippet × "×&*" iA
+*
+endsnippet
+
+snippet sp "space" i
+&ensp;
+endsnippet
+
+snippet 。 ".&。" iA
+.
+endsnippet
+
+# 荧光笔效果
+snippet yg "" i
+<mark>$1</mark>$0
+endsnippet
+
+# 考研词汇专用
+# 正确✅，错误❌
+snippet r "" i
+✅
+endsnippet
+snippet w "" i
+❌
+endsnippet
