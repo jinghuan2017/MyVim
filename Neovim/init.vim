@@ -27,6 +27,7 @@ set laststatus=2
 set scrolloff=7
 set timeoutlen=350
 set shell=/usr/bin/zsh
+set wildmenu
 
 inoremap <M-j> <Down>
 inoremap <M-k> <Up>
@@ -34,19 +35,20 @@ inoremap <M-h> <left>
 inoremap <M-l> <Right>
 inoremap <M-i> <Home>
 inoremap <M-o> <End>
-inoremap <M-;> <BackSpace>
-inoremap <M-'> <Delete>
 noremap H ^
 noremap L $
 nnoremap ; :
 nnoremap J 5j
 nnoremap K 5k
 
-set wildmenu
+imap <C-s> <C-o>:update<CR>
+nmap <C-s> :update<CR>
+vmap <C-s> <C-c>:update<CR>
 
+tnoremap <Esc> <C-\><C-N>
 map <LEADER><CR> :set nohlsearch<CR>
 map s <nop>
-
+map Q :q<CR>
 map sl :set splitright<CR>:vsplit<CR>
 map sh :set nosplitright<CR>:vsplit<CR>
 map sk :set nosplitbelow<CR>:split<CR>
@@ -69,12 +71,12 @@ map ta :tabe<CR>
 map th :-tabnext<CR>
 map tl :+tabnext<CR>
 
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {}<ESC>i
-inoremap " ""<ESC>i
-inoremap < <><ESC>i
-inoremap ' ''<ESC>i
+" inoremap ( ()<ESC>i
+" inoremap [ []<ESC>i
+" inoremap { {}<ESC>i
+" inoremap " ""<ESC>i
+" inoremap < <><ESC>i
+" inoremap ' ''<ESC>i
 set nocompatible
 filetype on
 filetype indent on
@@ -121,6 +123,7 @@ autocmd InsertEnter * call Fcitx2zh()
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'jiangmiao/auto-pairs'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'vim-airline/vim-airline'
 Plug 'junegunn/vim-peekaboo'
@@ -129,7 +132,6 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'ycm-core/YouCompleteMe'
 Plug 'Yggdroot/indentLine'
-Plug 'jpalardy/vim-slime'
 Plug 'SirVer/ultisnips'
 " markdown
 Plug 'godlygeek/tabular'
@@ -145,10 +147,9 @@ Plug 'ianva/vim-youdao-translater'
 call plug#end()
 
 
-
-" ==============
-" ===theme======
-" ==============
+" ====================
+" ===space-vim-drak===
+" ====================
 colorscheme space-vim-dark
 hi Conmment cterm=italic
 hi Normal     ctermbg=NONE guibg=NONE
@@ -157,6 +158,8 @@ hi SignColumn ctermbg=NONE guibg=NONE
 hi Comment guifg=#5C6370 ctermfg=59
 set termguicolors
 hi LineNr ctermbg=NONE guibg=NONE
+
+
 " ============
 " ===snazzy===
 " ============
@@ -172,31 +175,32 @@ map tt :NERDTreeToggle<CR>
 
 
 " =============
-" ===rainbow===
+" ===Rainbow===
 " =============
-let g:rbpt_colorpairs = [
-    \ ['green',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+" let g:rbpt_colorpairs = [
+"     \ ['brown',       'RoyalBlue3'],
+"     \ ['Darkblue',    'SeaGreen3'],
+"     \ ['darkgray',    'DarkOrchid3'],
+"     \ ['darkgreen',   'firebrick3'],
+"     \ ['darkcyan',    'RoyalBlue3'],
+"     \ ['darkred',     'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['brown',       'firebrick3'],
+"     \ ['gray',        'RoyalBlue3'],
+"     \ ['black',       'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['Darkblue',    'firebrick3'],
+"     \ ['darkgreen',   'RoyalBlue3'],
+"     \ ['darkcyan',    'SeaGreen3'],
+"     \ ['darkred',     'DarkOrchid3'],
+"     \ ['red',         'firebrick3'],
+"     \ ]
+" let g:rbpt_max = 16
+" let g:rbpt_loadcmd_toggle = 1
+" au VimEnter * RainbowParenthesesToggle
+" au Syntax * RainbowParenthesesLoadRound
+" au Syntax * RainbowParenthesesLoadSquare
+" au Syntax * RainbowParenthesesLoadBraces
 
 
 " =========
@@ -212,14 +216,6 @@ let g:indentLine_enable = 0
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 
-" ===========
-" ===slime===
-" ===========
-let g:slime_target = "tmux"
-let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
-let g:slime_python_ipython = 1
-
-
 " ============== 
 " ===markdown===
 " ==============
@@ -229,6 +225,8 @@ let g:vim_markdown_folding_disabled = 1  "关闭折叠
 let g:tex_conceal = ""
 let g:vim_markdown_math = 1
 let g:vim_markdown_conceal_code_blocks = 0  "禁用代码栅栏隐藏
+
+
 " 解决YCM和Ultisnips按键冲突问题
 function! g:UltiSnips_Complete()
   call UltiSnips#ExpandSnippet()
@@ -264,6 +262,7 @@ endif
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
+
 " =============== 
 " ===ultisnips===
 " ===============
@@ -273,9 +272,20 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 "设置向前跳转键
 let g:UltiSnipsJumpBackwardTrigger = '<tab-b>' 
 
+
 " ============
 " ===youdao===
 " ============
 vnoremap <silent> <C-T> :<C-u>Ydv<CR>
 nnoremap <silent> <C-T> :<C-u>Ydc<CR>
 noremap <leader>yd :<C-u>Yde<CR>
+
+
+" ==============
+" ===floaterm===
+" ==============
+noremap fl :FloatermNew --wintype=normal --position=right --width=0.5
+noremap fn :FloatermNew<CR>
+vnoremap <silent> <C-c><C-c> :FloatermSend<CR>
+
+
