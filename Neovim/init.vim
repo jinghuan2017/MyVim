@@ -71,12 +71,6 @@ map ta :tabe<CR>
 map th :-tabnext<CR>
 map tl :+tabnext<CR>
 
-" inoremap ( ()<ESC>i
-" inoremap [ []<ESC>i
-" inoremap { {}<ESC>i
-" inoremap " ""<ESC>i
-" inoremap < <><ESC>i
-" inoremap ' ''<ESC>i
 set nocompatible
 filetype on
 filetype indent on
@@ -91,26 +85,30 @@ let &t_SI="\<Esc>]50;CursorShape=1\x7"
 let &t_SR="\<Esc>]50;CursorShape=2\x7" 
 let &t_EI="\<Esc>]50;CursorShape=0\x7" 
 
-" 中文输入法在normal模式下切换问题
-let g:input_toggle = 0
-function! Fcitx2en()
-let s:input_status = system("fcitx-remote")
-if s:input_status == 2
+
+
+" 在vim中按下esc切换到normal模式时自动切换为英文输入法
 let g:input_toggle = 1
-let l:a = system("fcitx-remote -c")
-endif
+function! Fcitx2en()
+   let s:input_status = system("fcitx5-remote")
+   if s:input_status == 2
+      let g:input_toggle = 1
+      let l:a = system("fcitx5-remote -c")
+   endif
 endfunction
 
 function! Fcitx2zh()
-let s:input_status = system("fcitx-remote")
-if s:input_status != 2 && g:input_toggle == 1
-let l:a = system("fcitx-remote -o")
-let g:input_toggle = 0
-endif
+   let s:input_status = system("fcitx5-remote")
+   if s:input_status != 2 && g:input_toggle == 1
+      let l:a = system("fcitx5-remote -o")
+      let g:input_toggle = 0
+   endif
 endfunction
 
+set timeoutlen=150
 autocmd InsertLeave * call Fcitx2en()
-autocmd InsertEnter * call Fcitx2zh()
+"autocmd InsertEnter * call Fcitx2zh()
+
 
 
 "                            _                                   
@@ -130,7 +128,6 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'scrooloose/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'ycm-core/YouCompleteMe'
 Plug 'Yggdroot/indentLine'
 Plug 'SirVer/ultisnips'
 " markdown
@@ -143,6 +140,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'godlygeek/tabular' 
 Plug 'voldikss/vim-floaterm'
 Plug 'ianva/vim-youdao-translater'
+
+" coc.nvim
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -160,53 +160,10 @@ set termguicolors
 hi LineNr ctermbg=NONE guibg=NONE
 
 
-" ============
-" ===snazzy===
-" ============
-""color snazzy
-""let g:SnazzyTransparent = 1
-
-
 " ==============
 " ===NERDtree===
 " ==============
 map tt :NERDTreeToggle<CR>
-
-
-
-" =============
-" ===Rainbow===
-" =============
-" let g:rbpt_colorpairs = [
-"     \ ['brown',       'RoyalBlue3'],
-"     \ ['Darkblue',    'SeaGreen3'],
-"     \ ['darkgray',    'DarkOrchid3'],
-"     \ ['darkgreen',   'firebrick3'],
-"     \ ['darkcyan',    'RoyalBlue3'],
-"     \ ['darkred',     'SeaGreen3'],
-"     \ ['darkmagenta', 'DarkOrchid3'],
-"     \ ['brown',       'firebrick3'],
-"     \ ['gray',        'RoyalBlue3'],
-"     \ ['black',       'SeaGreen3'],
-"     \ ['darkmagenta', 'DarkOrchid3'],
-"     \ ['Darkblue',    'firebrick3'],
-"     \ ['darkgreen',   'RoyalBlue3'],
-"     \ ['darkcyan',    'SeaGreen3'],
-"     \ ['darkred',     'DarkOrchid3'],
-"     \ ['red',         'firebrick3'],
-"     \ ]
-" let g:rbpt_max = 16
-" let g:rbpt_loadcmd_toggle = 1
-" au VimEnter * RainbowParenthesesToggle
-" au Syntax * RainbowParenthesesLoadRound
-" au Syntax * RainbowParenthesesLoadSquare
-" au Syntax * RainbowParenthesesLoadBraces
-
-
-" =========
-" ===YCM===
-" =========
-let g:ycm_autoclose_preview_window_after_completion = 1
 
 
 " ================ 
@@ -226,51 +183,14 @@ let g:tex_conceal = ""
 let g:vim_markdown_math = 1
 let g:vim_markdown_conceal_code_blocks = 0  "禁用代码栅栏隐藏
 
-
-" 解决YCM和Ultisnips按键冲突问题
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
-
 " =============== 
 " ===ultisnips===
 " ===============
-let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsExpandTrigger = '<M-c>'
 "设置向后跳转键
-let g:UltiSnipsJumpForwardTrigger = '<tab>' 
+let g:UltiSnipsJumpForwardTrigger = '<M-c>' 
 "设置向前跳转键
-let g:UltiSnipsJumpBackwardTrigger = '<tab-b>' 
+let g:UltiSnipsJumpBackwardTrigger = '<M-b>' 
 
 
 " ============
@@ -288,4 +208,36 @@ noremap fl :FloatermNew --wintype=normal --position=right --width=0.5
 noremap fn :FloatermNew<CR>
 vnoremap <silent> <C-c><C-c> :FloatermSend<CR>
 
+
+
+
+" =========
+" ===coc===
+" =========
+
+let g:coc_global_extensions = ['coc-python',  'coc-vimlsp']
+"让Tab可以补全
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+"coc自动补全后按下回车键不会换行
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" 使用[w 和 w]来查找上一个和下一个错误
+nmap <silent> [w <Plug>(coc-diagnostic-prev)
+nmap <silent> ]w <Plug>(coc-diagnostic-next)
+
+" 光标所在词的相同词高亮
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" <leader>rn对变量重命名
+nmap <leader>rn <Plug>(coc-rename)
 
